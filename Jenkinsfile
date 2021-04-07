@@ -9,37 +9,12 @@ pipeline {
 
     
   stages {
-     stage ('Artifactory configuration') {
-            steps {
-                
-                rtMavenDeployer (
-                    id: "MAVEN_DEPLOYER",
-                    serverId: "ARTIFACTORY_SERVER",
-                    releaseRepo: "local-libs-release",
-                    snapshotRepo: "local-libs-snapshot"
-                )
-
-                rtMavenResolver (
-                    id: "MAVEN_RESOLVER",
-                    serverId: "ARTIFACTORY_SERVER",
-                    releaseRepo: "libs-release",
-                    snapshotRepo: "libs-snapshot"
-                )
-            }
-        }
+     
 
     stage('Unit Test') {
       steps {
         withMaven ( globalMavenSettingsConfig : "1786ed01-12e2-443f-b072-085572b18289" ) {
-        sh 'mvn -B clean test'
-        }
-      }
-    }
-
-    stage('Deploy to Artifactory') {
-      steps {
-        withMaven ( globalMavenSettingsConfig : "1786ed01-12e2-443f-b072-085572b18289" ) {
-        sh 'mvn -B deploy'
+        sh 'mvn deploy'
         }
       }
     }

@@ -10,15 +10,27 @@ pipeline {
     
   stages {
      
-
     stage('Unit Test') {
       steps {
-        withMaven ( globalMavenSettingsConfig : "1786ed01-12e2-443f-b072-085572b18289" ) {
-        sh 'mvn deploy'
-        }
+         withMaven ( globalMavenSettingsConfig : "1786ed01-12e2-443f-b072-085572b18289" ) {
+            configFileProvider([configFile(fileId: "1786ed01-12e2-443f-b072-085572b18289", variable: "MAVEN_SETTINGS")]) {
+                sh 'mvn --settings ${MAVEN_SETTINGS} -B clean test'
+            }
+         }
       }
     }
-  } 
+    
+    stage('Deploy Artifact') {
+      steps {
+         withMaven ( globalMavenSettingsConfig : "1786ed01-12e2-443f-b072-085572b18289" ) {
+            configFileProvider([configFile(fileId: "1786ed01-12e2-443f-b072-085572b18289", variable: "MAVEN_SETTINGS")]) {
+                sh 'mvn --settings ${MAVEN_SETTINGS} -B -DskipTest deploy'
+            }
+         }
+      }
+    }
+  }
+
   post {
    
     always {

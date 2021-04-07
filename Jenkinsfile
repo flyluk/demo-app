@@ -14,6 +14,14 @@ pipeline {
         }
       }
     }
+
+    stage('Deploy to Artifactory') {
+      steps {
+        withMaven ( globalMavenSettingsConfig : "1786ed01-12e2-443f-b072-085572b18289" ) {
+        sh 'mvn -B deploy'
+        }
+      }
+    }
   } 
   post {
    

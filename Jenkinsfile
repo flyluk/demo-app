@@ -3,7 +3,7 @@ pipeline {
   agent {
         docker { 
             image 'maven' 
-            args '-v $HOME/.m2:/root/.m2'
+            args '-u root -v $HOME/.m2:/root/.m2'
             }
     }
   stages {
@@ -16,8 +16,9 @@ pipeline {
   post {
    
     always {
+      junit '**/TEST*.xml'
       script {
-        junit
+        
         if(manager.logContains(".*helwqeedddwqelo.*")) {
         manager.addWarningBadge("Thou shalt not use deprecated methods.")
         manager.createSummary("warning.gif").appendText("<h1>You have been warned!</h1>", false, false, false, "red")

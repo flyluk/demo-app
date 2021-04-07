@@ -1,7 +1,10 @@
 pipeline {
 
   agent {
-        docker { image 'maven' }
+        docker { 
+            image 'maven' 
+            args '-v $HOME/.m2:/home//.m2'
+            }
     }
   stages {
     stage('Unit Test') {
@@ -14,6 +17,7 @@ pipeline {
    
     always {
       script {
+        junit 'target/surefire-reports/*.xml'
         if(manager.logContains(".*helwqeedddwqelo.*")) {
         manager.addWarningBadge("Thou shalt not use deprecated methods.")
         manager.createSummary("warning.gif").appendText("<h1>You have been warned!</h1>", false, false, false, "red")

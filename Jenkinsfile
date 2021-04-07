@@ -24,7 +24,7 @@ pipeline {
       steps {
          withMaven ( globalMavenSettingsConfig : "1786ed01-12e2-443f-b072-085572b18289" ) {
             configFileProvider([configFile(fileId: "1786ed01-12e2-443f-b072-085572b18289", variable: "MAVEN_SETTINGS")]) {
-                sh 'mvn --settings ${MAVEN_SETTINGS} -B -DskipTest deploy'
+                sh 'mvn --settings ${MAVEN_SETTINGS} -B -DskipTests=true deploy'
             }
          }
       }

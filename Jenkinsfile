@@ -17,7 +17,12 @@ pipeline {
    
     always {
       junit '**/TEST*.xml'
-      jacoco(execPattern: 'target/jacoco.exec')
+      jacoco(
+            execPattern: 'target/jacoco.exec',
+            classPattern: 'target/classes/**',
+            sourcePattern: 'src/**',
+            inclusionPattern: '**/*.class'
+        )
       script {
         
         if(manager.logContains(".*helwqeedddwqelo.*")) {

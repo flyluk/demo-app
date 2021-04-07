@@ -9,7 +9,9 @@ pipeline {
   stages {
     stage('Unit Test') {
       steps {
+        withMaven{
         sh 'mvn -B clean test'
+        }
       }
     }
   }

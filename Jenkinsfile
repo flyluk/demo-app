@@ -2,7 +2,7 @@ pipeline {
 
   agent {
         docker { 
-            image 'maven' 
+            image 'maven:local-user' 
             args '-v $HOME/.m2:/home/jenkins/.m2'
             }
     }

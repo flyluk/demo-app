@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Unit Test') {
       steps {
-        withMaven ( mavenSettingsConfig : "MavenGlobalSettings" ) {
+        withMaven ( mavenSettingsConfig : "57c5ad16-88c1-4de2-9a5c-46e459314708" ) {
         sh 'mvn -B clean test'
         }
       }

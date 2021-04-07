@@ -22,12 +22,12 @@
     	<repository>
 			<id>central</id>
 			<name>a0w3oujz2pgqw-artifactory-primary-0-releases</name>
-			<url>https://flyartifactory.jfrog.io/artifactory/lib-release</url>
+			<url>https://flyartifactory.jfrog.io/artifactory/local-lib-release</url>
     	</repository>
 		 <snapshotRepository>
         	<id>snapshots</id>
         	<name>a0w3oujz2pgqw-artifactory-primary-0-snapshots</name>
-        	<url>https://flyartifactory.jfrog.io/artifactory/lib-snapshot</url>
+        	<url>https://flyartifactory.jfrog.io/artifactory/local-lib-snapshot</url>
     </snapshotRepository>
 
 	</distributionManagement>

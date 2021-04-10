@@ -22,6 +22,19 @@ pipeline {
       }
     }
     
+
+    stage('SonarQube Scan') {
+      steps {
+         withSonarQubeEnv ( "SonarQube") {
+              sh "mvn sonar:sonar"
+         }
+         
+         timeout(time: 3, unit: 'MINUTES') {
+             waitForQualityGate abortPipeline: false
+         }
+      }
+    }
+    
     stage('Deploy Artifact') {
       steps {
           rtMavenResolver (

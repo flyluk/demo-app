@@ -20,6 +20,7 @@ pipeline {
             }
          }
       }
+    }
     
 
     stage('SonarQube Scan') {
@@ -30,7 +31,6 @@ pipeline {
          
          timeout(time: 3, unit: 'MINUTES') {
              waitForQualityGate abortPipeline: false
-           }
          }
       }
     }

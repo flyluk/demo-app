@@ -1,24 +1,70 @@
 pipeline {
 
   agent {
-        docker { 
-            image 'maven:local-user' 
-            args '-v $HOME/.m2:/home/jenkins/.m2'
-            }
+    kubernetes {
+      defaultContainer 'maven'
+      yaml """\
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          labels:
+            some-label: some-label-value
+        spec:
+          containers:
+          - name: maven
+            image: maven:latest
+            command:
+            - cat
+            tty: true
+            env:
+            - name: JAVA_HOME
+              value: /java/openjdk-16
+          - name: busybox
+            image: busybox
+            command:
+            - cat
+            tty: true
+        """.stripIndent()
     }
+  }
     environment {
         JAVA_HOME = '/usr/java/openjdk-16'
     }
     
   stages {
-     
+    stage('init') {
+      steps {
+          rtMavenResolver (
+            id: 'resolver-unique-id',
+            serverId: 'ARTIFACTORY_SERVER',
+            releaseRepo: 'lib-release',
+            snapshotRepo: 'lib-snapshot'
+          )  
+ 
+        rtMavenDeployer (
+            id: 'deployer-unique-id',
+            serverId: 'ARTIFACTORY_SERVER',
+            releaseRepo: 'lib-release-local',
+            snapshotRepo: 'lib-snapshot-local',
+    
+        )
+        
+        rtBuildInfo (captureEnv: true)
+      }
+    }
     stage('Unit Test') {
       steps {
-         withMaven ( globalMavenSettingsConfig : "1786ed01-12e2-443f-b072-085572b18289" ) {
-            configFileProvider([configFile(fileId: "1786ed01-12e2-443f-b072-085572b18289", variable: "MAVEN_SETTINGS")]) {
-                sh 'mvn --settings ${MAVEN_SETTINGS} -B clean test install'
-            }
-         }
+         rtMavenRun (
+            // Tool name from Jenkins configuration.
+            tool: "Maven",
+            opts: "",
+            pom: 'pom.xml',
+            goals: 'clean test',
+            // Maven options.
+            resolverId: 'resolver-unique-id',
+            deployerId: 'deployer-unique-id',
+            // If the build name and build number are not set here, the current job name and number will be used:
+        )
       }
     }
     
@@ -47,8 +93,8 @@ pipeline {
         rtMavenDeployer (
             id: 'deployer-unique-id',
             serverId: 'ARTIFACTORY_SERVER',
-            releaseRepo: 'local-lib-release',
-            snapshotRepo: 'local-lib-snapshot',
+            releaseRepo: 'lib-release-local',
+            snapshotRepo: 'lib-snapshot-local',
     
         )
         

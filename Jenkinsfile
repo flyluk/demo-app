@@ -120,17 +120,16 @@ pipeline {
   post {
    
     always {
-      //junit '**/TEST*.xml'
+      junit '**/TEST*.xml'
       
-      //jacoco(
-      //      execPattern: 'target/jacoco.exec',
-      //      classPattern: 'target/classes/**',
-      //      sourcePattern: 'src/**',
-      //      inclusionPattern: '**/*.class'
-       // )
+      jacoco(
+            execPattern: 'target/jacoco.exec',
+            classPattern: 'target/classes/**',
+            sourcePattern: 'src/**',
+            inclusionPattern: '**/*.class'
+      )
       
       script {
-        
         if(manager.logContains(".*helwqeedddwqelo.*")) {
         manager.addWarningBadge("Thou shalt not use deprecated methods.")
         manager.createSummary("warning.gif").appendText("<h1>You have been warned!</h1>", false, false, false, "red")
